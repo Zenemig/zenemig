@@ -1,22 +1,46 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Roboto, Roboto_Condensed, Dancing_Script } from "next/font/google";
+import { Unica_One } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "../components/ThemeProvider";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
+// Primary font - Roboto
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto',
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+// Secondary font - Roboto Condensed
+const robotoCondensed = Roboto_Condensed({
+  weight: ['300', '400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-roboto-condensed',
+});
+
+// Handwritten font - Dancing Script
+const dancingScript = Dancing_Script({
+  weight: ['400', '500', '600', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-dancing-script',
+});
+
+// Display font - Unica One
+const unicaOne = Unica_One({
+  weight: ['400'],
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-unica-one',
 });
 
 export const metadata: Metadata = {
-  title: "Zenemig | Personal Portfolio",
-  description: "Zenemig's personal portfolio website - showcasing projects, photography, and more",
+  title: "Zenemig | Developer & Photographer",
+  description: "Zenemig's personal portfolio - Showcasing photography, development projects, and creative work",
+  keywords: "Zenemig, photography, development, creative, portfolio, developer",
 };
 
 export default function RootLayout({
@@ -27,7 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${roboto.variable} ${robotoCondensed.variable} ${dancingScript.variable} ${unicaOne.variable} antialiased`}
       >
         <AppRouterCacheProvider>
           <ThemeProvider>
