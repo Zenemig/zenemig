@@ -1,0 +1,25 @@
+{
+  "commitMessageFormat": {
+    "pattern": "^(feat|fix|docs|style|refactor|test|chore)(\\([a-z]+\\))?: .{1,50}$",
+    "example": "feat(auth): add login functionality"
+  },
+  "typescript": {
+    "strict": true,
+    "noImplicitAny": true,
+    "preferredNaming": {
+      "components": "PascalCase",
+      "variables": "camelCase"
+    }
+  },
+  "mui": {
+    "enforce": "Use MUI components and theming. Do not hardcode styles. Use theme.palette for colors."
+  },
+  "testing": {
+    "unit": "Use Jest with ts-jest for unit testing. Follow React Testing Library practices.",
+    "e2e": "Use Playwright for end-to-end testing with data-testid attributes for selectors."
+  },
+  "general": {
+    "usePrettier": true,
+    "linting": "All code must pass ESLint checks."
+  }
+}
