@@ -1,16 +1,22 @@
 import { Inter } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useAtom } from 'jotai';
-import { themeAtom } from '@/atoms/theme';
-import getTheme from '@/theme';
+import { Provider } from 'jotai';
+import ThemeProvider from '@/components/ThemeProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
   title: 'Zenemig',
   description: 'Zenemig - Personal Website',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -18,17 +24,15 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [mode] = useAtom(themeAtom);
-  const theme = getTheme(mode);
-
   return (
     <html lang="en">
       <body className={inter.className}>
         <AppRouterCacheProvider>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            {children}
-          </ThemeProvider>
+          <Provider>
+            <ThemeProvider>
+              {children}
+            </ThemeProvider>
+          </Provider>
         </AppRouterCacheProvider>
       </body>
     </html>

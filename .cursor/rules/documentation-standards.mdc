@@ -1,0 +1,232 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Elite Code Documentation Standards
+
+## Overview
+This document outlines strict standards for code documentation, JSDoc comments, and documentation maintenance in TypeScript and React projects.
+
+## 1. General Documentation Requirements
+
+### 1.1. File Documentation
+
+Every source file MUST have a top-level JSDoc comment that includes:
+- Brief description of the file's purpose
+- @module tag to identify the module
+- @author tag (when applicable)
+- @since tag with version or date
+
+```typescript
+/**
+ * User profile component that displays and allows editing of user information.
+ * Supports display, edit, and admin view modes.
+ * 
+ * @module UserProfile
+ * @since 1.2.0
+ */
+```
+
+### 1.2. Documentation Coverage
+
+The following MUST be documented:
+- All exported functions, components, and classes
+- All interfaces and type definitions
+- All props in component interfaces
+- All public methods and properties
+- All non-trivial state variables
+- All complex logic blocks
+
+## 2. JSDoc Comment Standards
+
+### 2.1. Component Documentation
+
+All React components MUST have JSDoc comments with:
+- Description of the component's purpose and behavior
+- @example showing basic usage
+- @returns description of what the component renders
+
+```typescript
+/**
+ * A button that supports various styles and states.
+ * Renders a MUI Button with custom styling based on variant.
+ * 
+ * @example
+ * <PrimaryButton onClick={handleClick}>Submit</PrimaryButton>
+ * 
+ * @returns A styled button component
+ */
+function PrimaryButton({ children, onClick }: PrimaryButtonProps): JSX.Element {
+  // implementation
+}
+```
+
+### 2.2. Function Documentation
+
+All functions MUST have JSDoc comments with:
+- Description of what the function does
+- @param for each parameter
+- @returns description of the return value
+- @throws for expected exceptions (when applicable)
+
+```typescript
+/**
+ * Formats a date string into a localized date format.
+ * 
+ * @param {string} dateString - ISO date string to format
+ * @param {string} [format='short'] - The format to use (short, medium, long)
+ * @returns {string} The formatted date string
+ * @throws {Error} If the date string is invalid
+ */
+function formatDate(dateString: string, format: 'short' | 'medium' | 'long' = 'short'): string {
+  // implementation
+}
+```
+
+### 2.3. Hook Documentation
+
+All custom hooks MUST have JSDoc comments with:
+- Description of the hook's purpose
+- @param for each parameter
+- @returns description of the return value(s)
+- @example showing basic usage
+
+```typescript
+/**
+ * Hook to manage authentication state and operations.
+ * Provides login, logout, and current user state.
+ * 
+ * @example
+ * const { user, login, logout } = useAuth();
+ * 
+ * @returns An object containing authentication state and functions
+ */
+function useAuth(): AuthHookResult {
+  // implementation
+}
+```
+
+### 2.4. Type Documentation
+
+All interfaces and types MUST have JSDoc comments with:
+- Description of what the type represents
+- Comment for each property
+
+```typescript
+/**
+ * User profile information used throughout the application.
+ */
+interface UserProfile {
+  /** Unique identifier for the user */
+  id: string;
+  /** User's full display name */
+  name: string;
+  /** User's email address */
+  email: string;
+  /** User's permission level in the system */
+  role: 'admin' | 'user' | 'guest';
+}
+```
+
+## 3. Code Comments
+
+### 3.1. Implementation Comments
+
+- Use inline comments to explain "why" not "what"
+- Every complex logic block MUST have a comment explaining its purpose
+- All workarounds or non-obvious solutions MUST have explanatory comments
+
+```typescript
+// This recursive algorithm traverses the tree depth-first
+// Uses a stack to avoid exceeding call stack limits on large trees
+function traverseTree(node: TreeNode): void {
+  const stack: TreeNode[] = [node];
+  
+  while (stack.length > 0) {
+    // Pop the current node for processing
+    const current = stack.pop()!;
+    process(current);
+    
+    // Push children in reverse order to maintain traversal order
+    for (let i = current.children.length - 1; i >= 0; i--) {
+      stack.push(current.children[i]);
+    }
+  }
+}
+```
+
+### 3.2. TODO Comments
+
+- TODO comments are strictly prohibited in production code
+- If a temporary workaround is needed, use FIXME with a ticket number
+- All FIXME comments MUST include:
+  - Description of the issue
+  - Link to a ticket/issue
+  - Planned resolution date
+
+```typescript
+// FIXME: This calculation doesn't account for timezone differences
+// JIRA: PROJ-1234
+// Resolution planned: 2023-06-30
+const currentDate = new Date().toLocaleDateString();
+```
+
+## 4. Documentation Maintenance
+
+### 4.1. Documentation Reviews
+
+- Documentation MUST be reviewed as part of code reviews
+- Missing or outdated documentation MUST be flagged as blocking issues
+- Documentation quality is as important as code quality
+
+### 4.2. Documentation Updates
+
+- Documentation MUST be updated whenever the corresponding code changes
+- JSDoc comments MUST accurately reflect the current behavior
+- Examples in documentation MUST be kept up-to-date and functional
+
+## Examples
+
+### ❌ Non-Compliant Function
+```typescript
+function calculateTotal(prices) {
+  return prices.reduce((total, price) => total + price, 0);
+}
+```
+Issues:
+1. Missing JSDoc comment
+2. Missing parameter type annotation
+3. Missing return type annotation
+4. No description of function purpose
+
+### ✅ Compliant Function
+```typescript
+/**
+ * Calculates the total price from an array of individual prices.
+ * 
+ * @param {number[]} prices - Array of prices to sum
+ * @returns {number} The sum of all prices
+ */
+function calculateTotal(prices: number[]): number {
+  return prices.reduce((total, price) => total + price, 0);
+}
+```
+
+### ❌ Non-Compliant Interface and Component
+```typescript
+interface UserProps {
+  id: string;
+  name: string;
+  roles: string[];
+}
+
+function UserProfile({ id, name, roles }: UserProps) {
+  // Implementation
+}
+```
+Issues:
+1. Missing JSDoc for interface
+2. Missing property descriptions
+3. Missing component JSDoc
+4. Missing return type for component 

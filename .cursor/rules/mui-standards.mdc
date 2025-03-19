@@ -1,0 +1,253 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Elite MUI Component Standards
+
+## Overview
+This document outlines strict standards for MUI component usage, theming, and styling.
+
+## 1. Component Usage Requirements
+
+### 1.1. Import Standards
+
+- ALWAYS import MUI components directly from their respective packages
+- NEVER use barrel imports from @mui/material
+
+```typescript
+// ❌ Bad
+import { Button, TextField, Typography } from '@mui/material';
+
+// ✅ Good
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+```
+
+### 1.2. Component Composition
+
+- Use MUI's composition pattern for component customization
+- Prefer component props over direct styling for consistent behavior
+- Follow MUI's semantic component usage (e.g., use Typography for text)
+- ALWAYS use MUI components where available, never create custom HTML alternatives
+
+```typescript
+// ❌ Bad
+<div className="heading">Title</div>
+
+// ✅ Good
+<Typography variant="h1">Title</Typography>
+```
+
+## 2. Theming Requirements
+
+### 2.1. Theme Configuration
+
+- Use a centralized theme configuration
+- Define all colors in the theme.palette
+- Define all typography in theme.typography
+- Define reusable component styles in theme.components
+- NEVER hardcode styles that should be defined in the theme
+
+```typescript
+// src/theme/index.ts
+import { createTheme } from '@mui/material/styles';
+
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2',
+      light: '#42a5f5',
+      dark: '#1565c0',
+      contrastText: '#ffffff',
+    },
+    // ... other colors
+  },
+  typography: {
+    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 700,
+    },
+    // ... other typography styles
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+        },
+      },
+    },
+    // ... other component customizations
+  },
+});
+```
+
+### 2.2. Theme Usage
+
+- Access theme values via the sx prop or useTheme hook
+- NEVER hardcode colors, spacing, or typography values
+- Use theme.palette for all colors
+- Use theme.spacing for all spacing values
+- Use theme.typography for all typography styles
+
+```typescript
+// ❌ Bad
+<Box sx={{ padding: '16px', color: '#1976d2' }}>
+
+// ✅ Good
+<Box sx={{ padding: (theme) => theme.spacing(2), color: (theme) => theme.palette.primary.main }}>
+```
+
+## 3. Styling Standards
+
+### 3.1. Style Approach
+
+- Use the `sx` prop for component-specific styling
+- Use styled components for reusable styled elements
+- NEVER use inline styles with the `style` prop
+- NEVER use CSS-in-JS libraries other than MUI's styling system
+
+```typescript
+// ❌ Bad
+<Box style={{ padding: '16px' }}>
+
+// ✅ Good
+<Box sx={{ padding: 2 }}>
+```
+
+### 3.2. Responsive Design
+
+- Use MUI's responsive design patterns
+- Use theme.breakpoints for all media queries
+- Use responsive props when available (e.g., `display={{ xs: 'block', md: 'flex' }}`)
+- Use breakpoint-specific values in the sx prop
+
+```typescript
+// ✅ Good
+<Box
+  sx={{
+    flexDirection: { xs: 'column', md: 'row' },
+    padding: { xs: 1, sm: 2, md: 3 },
+  }}
+>
+```
+
+### 3.3. Custom Components
+
+- Create reusable styled components with MUI's styled utility
+- Extend existing MUI components when possible
+- Always pass sx prop through to enable component customization
+
+```typescript
+// ✅ Good
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+
+const CustomButton = styled(Button)(({ theme }) => ({
+  borderRadius: theme.spacing(1),
+  textTransform: 'none',
+}));
+
+// Usage with sx prop still works
+<CustomButton sx={{ mt: 2 }}>Click Me</CustomButton>
+```
+
+## 4. Performance Optimization
+
+### 4.1. Component Memoization
+
+- Memoize custom components with React.memo
+- Use useCallback for event handlers passed to MUI components
+- Use useMemo for complex calculations used in rendering
+
+### 4.2. Bundle Size Optimization
+
+- Use direct imports for tree-shaking
+- Import only the specific icons needed from @mui/icons-material
+- Use dynamic imports for rarely used components
+
+```typescript
+// ❌ Bad - imports entire icons package
+import { Add, Delete, Edit } from '@mui/icons-material';
+
+// ✅ Good - direct imports enable tree-shaking
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+```
+
+## 5. Examples
+
+### ❌ Non-Compliant Component
+```typescript
+import { Button, TextField } from '@mui/material';
+
+function MyComponent() {
+  return (
+    <div style={{ padding: '10px' }}>
+      <Button style={{ backgroundColor: 'blue' }}>Submit</Button>
+    </div>
+  );
+}
+```
+Issues:
+1. Use direct imports instead of barrel imports from @mui/material
+2. Never use inline styles with 'style' prop, use 'sx' prop instead
+3. Never hardcode colors, use theme.palette
+4. Use Box or Stack instead of plain div
+
+### ✅ Compliant Component
+```typescript
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+
+function MyComponent() {
+  return (
+    <Box sx={{ padding: 2 }}>
+      <Typography variant="h4" sx={{ mb: 2 }}>Title</Typography>
+      <Button variant="contained" sx={{ mt: 1 }}>Submit</Button>
+    </Box>
+  );
+}
+```
+
+### ❌ Non-Compliant Button
+```typescript
+import Button from '@mui/material/Button';
+
+function MyComponent() {
+  return (
+    <Button 
+      sx={{ 
+        bgcolor: '#1976d2', 
+        '&:hover': { bgcolor: '#1565c0' } 
+      }}
+    >
+      Submit
+    </Button>
+  );
+}
+```
+Issue: Hardcoded color values instead of using theme.palette.primary.main and theme.palette.primary.dark
+
+### ✅ Compliant Button
+```typescript
+import Button from '@mui/material/Button';
+
+function MyComponent() {
+  return (
+    <Button 
+      sx={(theme) => ({ 
+        bgcolor: theme.palette.primary.main,
+        '&:hover': { bgcolor: theme.palette.primary.dark }
+      })}
+    >
+      Submit
+    </Button>
+  );
+}
+``` 

@@ -1,0 +1,169 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Elite Testing Framework Standards
+
+## Overview
+This document outlines elite testing standards for React and TypeScript, mandating comprehensive test coverage and precise methodologies.
+
+## 1. Test File Structure
+
+### 1.1. File Organization
+- Test files must be named `index.test.tsx` and placed in the same directory as the source file
+- No exceptions to this naming convention are allowed
+
+### 1.2. Required Imports
+```typescript
+import { renderWithProviders, screen, setupUserEvent } from '@/test-utils';
+import YourComponent from './index'; // Adjust the import path as needed
+import { yourComponentFixtures } from '@/fixtures/your-component-component';
+```
+
+### 1.3. Test Utils Requirements
+- All tests MUST use utilities from `@/test-utils` instead of direct testing library imports
+- If a required test utility is missing, it MUST be added to `src/test-utils/index.tsx`
+- Test utils MUST include at minimum:
+  - `renderWithProviders`: Renders components with all necessary providers
+  - `setupUserEvent`: Configures userEvent for interaction testing
+  - Re-exports from `@testing-library/react`
+- Custom test utils MUST be fully typed and documented with JSDoc comments
+- Test utils MUST be maintained centrally to ensure consistency across all tests
+
+## 2. Test Structure
+
+### 2.1. Component Tests
+```typescript
+describe('<YourComponent />', () => {
+  // Setup tests verify that the component renders correctly in various states
+  describe('Setup', () => {
+    it('renders in default state', () => {
+      renderWithProviders(<YourComponent />);
+      // Add detailed assertions that verify every visible element
+    });
+
+    it('renders with all possible props', () => {
+      renderWithProviders(<YourComponent {...yourComponentFixtures.allProps} />);
+      // Add assertions that verify all properties affect the component correctly
+    });
+  });
+
+  // Interaction tests verify that the component responds correctly to user input
+  describe('Interaction', () => {
+    it('handles primary user action', async () => {
+      const user = setupUserEvent();
+      renderWithProviders(<YourComponent />);
+      
+      // Act - perform user interactions
+      // Assert - verify the component responds correctly
+    });
+  });
+
+  // Edge cases and error handling
+  describe('Edge Cases', () => {
+    it('handles empty/null data gracefully', () => {
+      renderWithProviders(<YourComponent data={null} />);
+      // Verify the component doesn't crash and shows appropriate feedback
+    });
+  });
+});
+```
+
+### 2.2. Test Fixtures
+
+**MANDATORY**: Create or use fixtures from the central fixtures directory:
+
+```typescript
+// @/fixtures/your-component-component.ts
+export const yourComponentFixtures = {
+  allProps: {
+    // All possible props with valid values
+  },
+  minimalProps: {
+    // Minimal required props
+  },
+  edgeCaseProps: {
+    // Props that test edge cases
+  }
+};
+```
+
+## 3. Testing Principles
+
+### 3.1. Core Requirements
+1. **100% Functional Coverage**: Test every user-visible behavior and state
+2. **Behavior-Driven**: Test what the component does, not how it does it
+3. **Independence**: Each test must be completely independent
+4. **Deterministic**: Tests must produce the same result every time
+5. **Fast**: Tests must run quickly with no unnecessary operations
+
+### 3.2. Coverage Requirements
+- Function coverage: 100%
+- Statement coverage: 100%
+- Branch coverage: 100%
+- Line coverage: 100%
+
+## 4. Elite Standards Checklist
+
+### 4.1. Structure and Syntax
+- [ ] Tests follow perfect structure with Setup/Interaction/Edge Cases pattern
+- [ ] Component tests use precise JSX syntax in describe: `<Component />`
+- [ ] Hook tests include parentheses: `useHook()`
+- [ ] Tests use renderWithProviders exclusively, never plain render
+- [ ] Tests use screen queries exclusively, never destructured queries
+
+### 4.2. Test Descriptions
+- [ ] Test descriptions use present tense, active voice with no exceptions
+- [ ] "should" phrasing is entirely absent from all test descriptions
+- [ ] Tests focus exclusively on observable behavior
+
+### 4.3. Testing Practices
+- [ ] Mocks are precise, targeting only the necessary dependencies
+- [ ] findBy* queries used consistently for all async elements
+- [ ] setupUserEvent used for all user interactions
+- [ ] All test fixtures imported from central fixtures directory
+- [ ] No test contains any logic duplication
+- [ ] Each test verifies exactly one behavior or state
+- [ ] All error states and edge cases are tested thoroughly
+
+
+## 5. Examples
+
+### ❌ Non-Compliant Test
+```typescript
+import { render, fireEvent } from '@testing-library/react';
+
+describe('Button', () => {
+  it('should handle click', () => {
+    const { getByText } = render(<Button />);
+    fireEvent.click(getByText('Click me'));
+  });
+});
+```
+Issues:
+1. Not using renderWithProviders
+2. Destructuring queries instead of using screen
+3. Using "should" in test description
+4. Missing JSX syntax in describe
+5. Using fireEvent instead of userEvent
+
+### ✅ Compliant Test
+```typescript
+import { renderWithProviders, screen, setupUserEvent } from '@/test-utils';
+import { buttonFixtures } from '@/fixtures/button-component';
+
+describe('<Button />', () => {
+  describe('Interaction', () => {
+    it('triggers onClick when clicked', async () => {
+      const user = setupUserEvent();
+      const onClick = jest.fn();
+      
+      renderWithProviders(<Button {...buttonFixtures.primary} onClick={onClick} />);
+      
+      await user.click(screen.getByRole('button'));
+      expect(onClick).toHaveBeenCalled();
+    });
+  });
+});
+``` 

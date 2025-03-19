@@ -1,0 +1,201 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Elite Development Workflow Standards
+
+## Overview
+This document outlines strict standards for Git workflow, commit messages, code reviews, and pull requests.
+
+## 1. Git Workflow
+
+### 1.1. Branching Strategy
+
+- All work MUST be done in feature branches
+- Branch names MUST follow the format: `type/issue-id/short-description`
+- Types are limited to: `feature`, `bugfix`, `hotfix`, `refactor`, `docs`, `test`, `chore`
+- All branch names MUST be lowercase with hyphens for spaces
+
+Examples:
+```
+feature/USER-123/add-user-profile
+bugfix/APP-456/fix-authentication-loop
+refactor/PERF-789/optimize-rendering
+```
+
+### 1.2. Commit Standards
+
+- Commit messages MUST follow Conventional Commits format: `type(scope): description`
+- Commit messages MUST match the pattern: `^(feat|fix|docs|style|refactor|test|chore)(\([a-z]+\))?: .{1,50}$`
+- Types are limited to: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- Scope MUST refer to the specific component or area of the codebase
+- Description MUST be concise, clear, and in present tense
+- Description MUST NOT exceed 50 characters
+- Body (if needed) MUST provide context and explain "why" not "what"
+- Footer MUST reference issue IDs with "Refs #123" or "Closes #123"
+
+Examples:
+```
+feat(auth): add OAuth2 login flow
+fix(profile): resolve user data loading issue
+refactor(forms): improve validation performance
+```
+
+### 1.3. Rebase Workflow
+
+- Feature branches MUST be regularly rebased on the latest main
+- NEVER use merge commits within feature branches
+- Before submitting a PR, ALWAYS rebase and squash trivial commits
+- Maintain logical commits for significant changes
+- ALWAYS force-push after rebasing a branch that has an open PR
+
+## 2. Pull Request Standards
+
+### 2.1. PR Creation
+
+Every PR MUST include:
+- Clear, descriptive title following the commit message format
+- Detailed description using the PR template
+- Link to the issue/ticket being addressed
+- Screenshots or videos for UI changes
+- All acceptance criteria addressed and verified
+- Test coverage for all changes
+
+### 2.2. PR Size Requirements
+
+- PRs MUST be focused on a single concern
+- PRs SHOULD NOT exceed 500 lines of changes (excluding tests)
+- Large features MUST be broken down into smaller, logical PRs
+- Refactoring MUST be separated from feature work
+
+### 2.3. PR Review Process
+
+- PRs MUST receive at least two approvals before merging
+- Authors MUST respond to all comments within 24 hours
+- Reviewers MUST complete reviews within 24 hours
+- All discussions MUST be resolved before merging
+- Authors SHOULD NOT merge their own PRs
+
+## 3. Code Review Standards
+
+### 3.1. Review Criteria
+
+All code reviews MUST evaluate:
+1. Functional correctness
+2. Code maintainability and readability
+3. Test coverage and quality
+4. Documentation quality
+5. Performance implications
+6. Security considerations
+7. Accessibility compliance (for UI changes)
+
+### 3.2. Review Feedback Guidelines
+
+- Comments MUST be specific, actionable, and constructive
+- Blocking issues MUST be clearly identified
+- Subjective preferences SHOULD be labeled as such
+- Positive aspects SHOULD be acknowledged along with improvements
+- Code examples SHOULD be provided for suggested changes
+
+### 3.3. Addressing Review Feedback
+
+- All feedback MUST receive a response
+- Reasonable suggestions MUST be implemented
+- Disagreements MUST be discussed constructively
+- Follow-up commits MUST address specific comments
+- Once changes are implemented, comment with "Addressed in commit SHA"
+
+## 4. Quality Assurance
+
+### 4.1. Pre-PR Checklist
+
+Before submitting a PR, verify:
+- All tests pass locally
+- Linters show no errors or warnings
+- Code is formatted according to project standards
+- Code has been manually tested in development environment
+- All edge cases have been considered and tested
+- No console errors occur during normal usage
+- All code must pass ESLint checks
+- Code formatting must follow Prettier standards
+
+### 4.2. CI/CD Integration
+
+- All PRs MUST pass CI checks before merging
+- Failed CI checks MUST be addressed immediately
+- Never force-merge a PR with failing checks
+- Monitor deployment previews for unexpected issues
+
+### 4.3. Post-Merge Verification
+
+- After merging to main, verify the CI/CD pipeline succeeds
+- Validate changes in the staging environment
+- Monitor error tracking for new issues
+- Address any post-merge issues with highest priority
+
+## 5. Examples
+
+### ❌ Non-Compliant Commit Message
+```
+Added new login feature
+```
+Issue: Commit message doesn't follow Conventional Commits format.
+
+### ✅ Compliant Commit Message
+```
+feat(auth): add login functionality
+```
+
+### ❌ Non-Compliant Branch Name
+```
+login-feature
+```
+Issue: Branch name doesn't follow the required format.
+
+### ✅ Compliant Branch Name
+```
+feature/AUTH-123/add-user-authentication
+```
+
+### ❌ Non-Compliant PR
+Title: "Login feature added"
+Description: "Added login functionality"
+
+Issues:
+1. Title doesn't follow commit format
+2. Missing description template
+3. No issue link
+4. No acceptance criteria
+5. No test coverage mention
+
+### ✅ Compliant PR
+Title: "feat(auth): add user authentication"
+Description:
+```markdown
+## Description
+Implements user authentication using OAuth2 flow.
+
+## Issue
+Closes #123
+
+## Changes
+- Add OAuth2 login flow
+- Implement token management
+- Add user session handling
+
+## Testing
+- Added unit tests for auth flow
+- Added integration tests for login process
+- Manual testing completed in dev environment
+
+## Screenshots
+[Login screen screenshot]
+[Success state screenshot]
+
+## Checklist
+- [x] Tests added and passing
+- [x] Documentation updated
+- [x] UI/UX approved
+- [x] Security review completed
+``` 

@@ -1,0 +1,154 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Code Organization Standards
+
+## Overview
+This document outlines strict standards for component, hook, and utility organization in TypeScript and React projects.
+
+## 1. File Structure and Naming
+
+### 1.1. Component Structure
+
+All components must follow this structure:
+
+```
+src/components/
+├── ComponentName/
+│   ├── index.tsx              # Main component implementation
+│   ├── index.test.tsx         # Component tests
+│   ├── ComponentName.types.ts # Component type definitions
+│   ├── ComponentName.styles.ts # Component styles (if using styled-components)
+│   └── components/            # Sub-components (if needed)
+│       └── SubComponent.tsx   # Only used by this component
+```
+
+### 1.2. Hook Structure
+
+All custom hooks must follow this structure:
+
+```
+src/hooks/
+├── useDomainAction/
+│   ├── index.ts               # Main hook implementation
+│   ├── index.test.ts          # Hook tests
+│   └── useDomainAction.types.ts # Hook type definitions
+```
+
+### 1.3. Naming Conventions
+
+- **Components**: PascalCase (e.g., `UserProfile.tsx`)
+- **Hooks**: camelCase with 'use' prefix (e.g., `useAuthentication.ts`)
+- **Types/Interfaces**: PascalCase with descriptive names (e.g., `UserProfileProps`)
+- **Type files**: ComponentName.types.ts
+- **Utility functions**: camelCase with descriptive names
+
+## 2. Import Organization
+
+### 2.1. Import Order
+
+All files must organize imports in this specific order, separated by a blank line:
+
+1. External libraries
+2. Internal absolute imports (using path aliases)
+3. Relative imports from parent directories
+4. Relative imports from same/child directories
+5. Type imports
+6. Style imports
+
+Example:
+
+```typescript
+import React, { useEffect, useState } from 'react';
+import { Typography, Box } from '@mui/material';
+
+import { useAuth } from '@/hooks/useAuth';
+import { formatDate } from '@/utils/date';
+
+import { ParentComponent } from '../ParentComponent';
+
+import { ChildComponent } from './components/ChildComponent';
+import { UserData } from './UserProfile.types';
+import { useStyles } from './UserProfile.styles';
+```
+
+### 2.2. Path Aliases
+
+- Always use path aliases (@/) for importing from project directories
+- Never use relative paths that traverse more than one directory level
+
+## 3. Component Composition
+
+### 3.1. Component Structure
+
+- Each component file must export a single default component
+- Component implementation must follow this order:
+  1. Type definitions (if not in a separate file)
+  2. Constants
+  3. Component declaration
+  4. useEffect hooks (in order of dependency tree)
+  5. Event handlers
+  6. Render helpers
+  7. Return statement
+
+### 3.2. Props Management
+
+- All props must be typed using TypeScript interfaces
+- Destructure props at the component level
+- Document prop interfaces thoroughly
+- Use explicit prop typing, never use `any`
+- Default props should be defined using default parameters
+
+## 4. State Management
+
+### 4.1. State Organization
+
+- Use Jotai for global state management
+- Organize state atoms by domain
+- Colocate related state in custom hooks
+- Atom files should be organized by feature
+
+Example:
+
+```
+src/atoms/
+├── auth/
+│   ├── index.ts       # Exports all auth atoms
+│   ├── session.ts     # Session-related atoms
+│   └── user.ts        # User-related atoms
+├── ui/
+│   ├── index.ts       # Exports all UI atoms
+│   └── theme.ts       # Theme-related atoms
+```
+
+## Examples
+
+### Invalid Component Structure
+```typescript
+function MyComponent() {
+  return <div>Content</div>;
+}
+export default MyComponent;
+```
+⚠️ Issue: Missing TypeScript interface and arrow function syntax.
+
+### Valid Component Structure
+```typescript
+import { useState } from 'react';
+import { Typography } from '@mui/material';
+import { useStyles } from './styles';
+import { MyComponentProps } from './types';
+
+const MyComponent: React.FC<MyComponentProps> = ({ title }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  
+  return (
+    <Typography>{title}</Typography>
+  );
+};
+
+export default MyComponent;
+```
+✅ Note: Properly organized imports and typed component. 

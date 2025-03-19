@@ -1,0 +1,258 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Elite TypeScript Standards
+
+## Overview
+This document outlines strict TypeScript standards that enforce type safety, naming conventions, and best practices.
+
+## 1. Type Safety Requirements
+
+### 1.1. Strict Type Checking
+
+All TypeScript files MUST enable strict type checking with these compiler options:
+```json
+{
+  "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "exactOptionalPropertyTypes": true,
+    "noUncheckedIndexedAccess": true
+  }
+}
+```
+
+### 1.2. Type Definition Guidelines
+
+- NEVER use `any` type - use `unknown` when type is truly unknown
+- NEVER use non-null assertion operator (`!`) - use proper null checking
+- ALWAYS define explicit return types for functions and methods
+- ALWAYS use TypeScript interfaces for React component props
+- NEVER rely on implicit type inference for function parameters
+
+## 2. Naming Conventions
+
+### 2.1. Required Naming Patterns
+
+- **Components**: PascalCase (e.g., `UserProfile.tsx`)
+- **Variables and Functions**: camelCase (e.g., `userData`, `getUserData`)
+- **Interfaces**: PascalCase with descriptive names, NEVER prefix with 'I'
+  ```typescript
+  // ❌ Bad
+  interface IUserData {}
+  interface userData {} 
+  
+  // ✅ Good
+  interface UserData {}
+  ```
+
+- **Types**: PascalCase with descriptive names
+  ```typescript
+  // ❌ Bad
+  type userRole = 'admin' | 'user';
+  
+  // ✅ Good
+  type UserRole = 'admin' | 'user';
+  ```
+
+- **Enums**: PascalCase for enum name, PascalCase for enum values
+  ```typescript
+  // ❌ Bad
+  enum statusCodes {
+    SUCCESS = 200,
+    NOT_FOUND = 404
+  }
+  
+  // ✅ Good
+  enum StatusCode {
+    Success = 200,
+    NotFound = 404
+  }
+  ```
+
+- **Type Parameters**: Single uppercase letter (T) or PascalCase with descriptive name
+  ```typescript
+  // ❌ Bad
+  function getData<data>(value: data): data {}
+  
+  // ✅ Good
+  function getData<T>(value: T): T {}
+  function createList<ItemType>(items: ItemType[]): ItemType[] {}
+  ```
+
+### 2.2. Banned Type Practices
+
+- NEVER use `object` as a type (use `Record<string, unknown>` or a specific interface)
+- NEVER use `Function` as a type (use specific function signature)
+- NEVER use unspecific array types (use `T[]` or `Array<T>`)
+- NEVER redefine built-in types
+
+## 3. Type Architecture
+
+### 3.1. Type Organization
+
+- Organize types and interfaces in dedicated `.types.ts` files
+- Place shared types in `src/types/` directory
+- Component-specific types MUST be in `ComponentName.types.ts`
+- Hook-specific types MUST be in `useHookName.types.ts`
+
+### 3.2. Type Composition
+
+- Favor composition over inheritance
+- Use intersection types to combine types
+- Use utility types (`Pick`, `Omit`, `Partial`, `Required`, etc.) to derive types
+
+```typescript
+// ❌ Bad - duplicating properties
+interface UserProfileProps {
+  id: string;
+  name: string;
+  email: string;
+  isAdmin: boolean;
+}
+
+// ✅ Good - composing types
+interface User {
+  id: string;
+  name: string;
+  email: string;
+}
+
+type UserProfileProps = User & {
+  isAdmin: boolean;
+}
+```
+
+### 3.3. Discriminated Unions
+
+- Use discriminated unions for modeling mutually exclusive states
+
+```typescript
+// ✅ Good
+type RequestState =
+  | { status: 'idle' }
+  | { status: 'loading' }
+  | { status: 'success', data: User }
+  | { status: 'error', error: Error };
+```
+
+## 4. Typing React Components
+
+### 4.1. Component Props
+
+- ALWAYS define props using TypeScript interfaces
+- ALWAYS include JSDoc comments for all props
+- NEVER use `React.FC` or `React.FunctionComponent`
+- Use explicit type definitions for function components
+
+```typescript
+// ❌ Bad
+const Button: React.FC<ButtonProps> = ({ children, onClick }) => {
+  // ...
+};
+
+// ✅ Good
+interface ButtonProps {
+  /** The content of the button */
+  children: React.ReactNode;
+  /** Called when the button is clicked */
+  onClick: () => void;
+}
+
+function Button({ children, onClick }: ButtonProps): JSX.Element {
+  // ...
+}
+```
+
+### 4.2. Event Handlers
+
+- Use proper event types from React
+- Prefer inline arrow functions for simple handlers
+
+```typescript
+// ✅ Good
+function Button({ onClick }: ButtonProps): JSX.Element {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>): void => {
+    // ...
+    onClick();
+  };
+  
+  return <button onClick={handleClick}>Click me</button>;
+}
+```
+
+### 4.3. Component State
+
+- Always specify type for useState hooks
+- Use discriminated unions for complex state
+
+```typescript
+// ❌ Bad
+const [data, setData] = useState();
+
+// ✅ Good
+const [data, setData] = useState<User | null>(null);
+
+// ✅ Good - complex state
+type FormState = 
+  | { status: 'empty' }
+  | { status: 'editing', values: FormValues }
+  | { status: 'submitting', values: FormValues }
+  | { status: 'success' }
+  | { status: 'error', error: string };
+
+const [formState, setFormState] = useState<FormState>({ status: 'empty' });
+```
+
+## Examples
+
+### ❌ Non-Compliant Component
+```typescript
+function MyComponent(props) {
+  return <div>{props.name}</div>;
+}
+```
+Issue: Component props must be explicitly typed with a TypeScript interface.
+
+### ❌ Non-Compliant Interface
+```typescript
+interface UserData {
+  id: string;
+  name: string;
+  data: any;
+}
+```
+Issue: The property 'data' uses the 'any' type, which is prohibited. Use a more specific type or 'unknown' if the type is truly not known.
+
+### ❌ Non-Compliant Event Handler
+```typescript
+function handleSubmit(e) {
+  e.preventDefault();
+  const form = e.target as any;
+}
+```
+Issues:
+1. Event parameter 'e' is not typed
+2. 'any' type casting is forbidden, use proper DOM types
+
+### ✅ Compliant Component
+```typescript
+interface ButtonProps {
+  /** Button variant that controls appearance */
+  variant: 'primary' | 'secondary';
+  /** Called when button is clicked */
+  onClick: () => void;
+}
+
+function Button({ variant, onClick }: ButtonProps): JSX.Element {
+  return <button onClick={onClick}>Click me</button>;
+}
+``` 
