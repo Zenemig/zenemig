@@ -44,7 +44,13 @@ export const mockJotaiAtoms = () => {
  * @returns The mock setter function for assertions
  */
 export const setupMockThemeAtom = (initialMode = 'light') => {
-  const mockSetMode = jest.fn();
+  const mockSetMode = jest.fn().mockImplementation((value) => {
+    if (typeof value === 'function') {
+      const newValue = value(initialMode);
+      return newValue;
+    }
+    return value;
+  });
   useAtomMock.mockReturnValue([initialMode, mockSetMode]);
   return { mockSetMode };
 };

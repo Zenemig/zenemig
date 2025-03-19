@@ -51,13 +51,16 @@ function ThreeColumnLayout({
             flex: 1
           }}
         >
-          {/* Left Column - Hidden on mobile, fixed 320px width */}
-          {!isMobile && leftColumn && (
+          {/* Left Column - Hidden on mobile and tablet, fixed 320px width */}
+          {isDesktop && leftColumn && (
             <Grid 
               item
+              xs={false}
+              sm={4}
+              md={4}
+              lg={3}
               sx={{ 
-                display: { xs: 'none', sm: 'block' },
-                width: 320,
+                width: { sm: 320 },
                 flexShrink: 0,
                 flexGrow: 0,
                 height: '100%'
@@ -71,26 +74,31 @@ function ThreeColumnLayout({
           <Grid 
             item
             xs={12}
-            sm={true}
-            md={true}
-            lg={true}
+            sm={12}
+            md={12}
+            lg={6}
+            xl={6}
             sx={{
               flexGrow: 1,
-              height: '100%'
+              height: '100%',
+              minWidth: 0 // Prevent flex item from overflowing
             }}
           >
             {middleColumn}
           </Grid>
 
-          {/* Right Column - Hidden on tablet and mobile, fixed 320px width */}
+          {/* Right Column - Hidden on mobile and tablet, fixed 320px width */}
           {isDesktop && rightColumn && (
-            <Grid 
+            <Grid
               item
-              sx={{ 
-                display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' },
-                width: 320,
-                flexShrink: 0,
-                flexGrow: 0,
+              xs={false}
+              sm={false}
+              md={false}
+              lg={3}
+              xl={3}
+              sx={{
+                width: '320px',
+                maxWidth: '320px',
                 height: '100%'
               }}
             >

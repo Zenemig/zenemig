@@ -22,15 +22,21 @@ describe('<Logo />', () => {
     });
 
     it('renders with custom light color in light mode', () => {
-      renderWithProviders(<Logo lightColor="#FF0000" />, {}, 'light');
+      renderWithProviders(<Logo lightColor="#FF0000" />, { mode: 'light' });
       const logoElement = screen.getByLabelText('Logo');
-      expect(logoElement).toHaveStyle({ fill: '#FF0000' });
+      const paths = logoElement.querySelectorAll('path');
+      paths.forEach(path => {
+        expect(path).toHaveAttribute('fill', '#FF0000');
+      });
     });
 
     it('renders with custom dark color in dark mode', () => {
-      renderWithProviders(<Logo darkColor="#00FF00" />, {}, 'dark');
+      renderWithProviders(<Logo darkColor="#00FF00" />, { mode: 'dark' });
       const logoElement = screen.getByLabelText('Logo');
-      expect(logoElement).toHaveStyle({ fill: '#00FF00' });
+      const paths = logoElement.querySelectorAll('path');
+      paths.forEach(path => {
+        expect(path).toHaveAttribute('fill', '#00FF00');
+      });
     });
   });
 

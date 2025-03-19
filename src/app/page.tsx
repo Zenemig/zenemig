@@ -1,9 +1,12 @@
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+
 import ThemeToggle from '@/components/ThemeToggle';
 import ThreeColumnLayout from '@/components/ThreeColumnLayout';
 import Header from '@/components/Header';
+import Logo from '@/components/Logo';
+import { LeftSidebar } from '@/components/LeftSidebar';
 
 export default function Home() {
   return (
@@ -12,28 +15,16 @@ export default function Home() {
         headerComponent={
           <Header 
             title="Zenemig"
-            actions={<ThemeToggle />}
+            logo={<Logo width={40} />}
+            actions={
+              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <ThemeToggle />
+              </Box>
+            }
           />
         }
         leftColumn={
-          <Paper 
-            sx={{ 
-              p: 2, 
-              height: '100%',
-              borderRadius: 0, 
-            }}
-            elevation={0}
-          >
-            <Typography variant="h5" component="h2" gutterBottom>
-              Left Column
-            </Typography>
-            <Typography variant="body2" paragraph>
-              This left column is hidden on mobile devices and visible on tablet and desktop.
-            </Typography>
-            <Typography variant="body2">
-              This area would typically contain navigation, filters, or sidebar content.
-            </Typography>
-          </Paper>
+          <LeftSidebar />
         }
         middleColumn={
           <Paper 

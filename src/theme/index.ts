@@ -1,8 +1,8 @@
-import { createTheme, Theme } from '@mui/material/styles';
+import { createTheme as muiCreateTheme, Theme } from '@mui/material/styles';
 import { PaletteMode } from '@mui/material';
 
 // Create a theme instance for each mode
-const getTheme = (mode: PaletteMode): Theme => createTheme({
+const getTheme = (mode: PaletteMode): Theme => muiCreateTheme({
   palette: {
     mode,
     primary: {

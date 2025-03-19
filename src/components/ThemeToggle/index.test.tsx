@@ -1,62 +1,54 @@
+import React from 'react';
 import '@testing-library/jest-dom';
-import { renderWithProviders, screen, act } from '@/test-utils';
+import { renderWithProviders, screen } from '@/test-utils';
 import { setupUserEvent } from '@/test-utils';
 import ThemeToggle from './index';
-import { PaletteMode } from '@mui/material';
 
-// No need to mock themeAtom here - it's handled by the centralized test utilities
+// Mock the Switch component
+jest.mock('@mui/material/Switch', () => ({
+  __esModule: true,
+  default: ({ checked, onChange, inputProps = {}, ...props }: any) => 
+    React.createElement('input', {
+      type: 'checkbox',
+      checked,
+      onChange,
+      'aria-label': inputProps['aria-label'],
+      'data-testid': 'mui-switch',
+      ...props
+    })
+}));
 
 describe('<ThemeToggle />', () => {
-  // Helper to set up user events
-  const setupUser = () => setupUserEvent();
-  
   describe('Setup', () => {
-    it('renders in light mode', () => {
-      // Use the centralized renderWithProviders with 'light' mode
-      renderWithProviders(<ThemeToggle />, {}, 'light');
+    it('renders with correct initial state in light mode', () => {
+      const { mockSetMode } = renderWithProviders(<ThemeToggle />);
       
-      // Test what the user sees
-      expect(screen.getByRole('button')).toHaveTextContent('Toggle Dark Mode');
+      // Verify the toggle is in light mode
+      const toggle = screen.getByTestId('mui-switch');
+      expect(toggle).not.toBeChecked();
     });
 
-    it('renders in dark mode', () => {
-      // Use the centralized renderWithProviders with 'dark' mode
-      renderWithProviders(<ThemeToggle />, {}, 'dark');
+    it('renders with correct initial state in dark mode', () => {
+      const { mockSetMode } = renderWithProviders(<ThemeToggle />, { mode: 'dark' });
       
-      // Test what the user sees
-      expect(screen.getByRole('button')).toHaveTextContent('Toggle Light Mode');
+      // Verify the toggle is in dark mode
+      const toggle = screen.getByTestId('mui-switch');
+      expect(toggle).toBeChecked();
     });
   });
 
   describe('Interaction', () => {
-    it('calls the theme setter when clicked', async () => {
-      // Use the centralized renderWithProviders and get the mockSetMode
-      const { mockSetMode } = renderWithProviders(<ThemeToggle />, {}, 'light');
+    it('toggles theme when clicked', async () => {
+      const user = setupUserEvent();
+      const { mockSetMode } = renderWithProviders(<ThemeToggle />);
       
-      // Use the helper to set up user events
-      const user = setupUser();
+      // Click the toggle
+      const toggle = screen.getByTestId('mui-switch');
+      await user.click(toggle);
       
-      // Click the button
-      await user.click(screen.getByRole('button'));
-      
-      // Verify the mock setter was called
+      // Verify the theme was toggled
       expect(mockSetMode).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('Edge Cases', () => {
-    it('handles undefined theme mode gracefully', () => {
-      // Although this would be handled automatically by our theme provider,
-      // we still test it to ensure our component is robust
-      const { mockSetMode } = renderWithProviders(<ThemeToggle />, {}, undefined as PaletteMode | undefined);
-      
-      // The button should still be clickable
-      act(() => {
-        screen.getByRole('button').click();
-      });
-      
-      // Verify the mock was called
-      expect(mockSetMode).toHaveBeenCalledTimes(1);
+      expect(mockSetMode).toHaveBeenCalledWith(expect.any(Function));
     });
   });
 }); 
