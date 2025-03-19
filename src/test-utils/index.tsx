@@ -12,7 +12,8 @@ import {
   mockMuiGrid,
   mockMuiAppBar,
   mockMuiToolbar,
-  mockMuiTypography
+  mockMuiTypography,
+  setMockThemeMode
 } from '@/mocks/mui';
 
 // Initialize all mocks with a single setup call
@@ -207,6 +208,9 @@ function renderWithProviders(
 ) {
   // Setup the atom mock value for theme
   const { mockSetMode } = setupMockThemeAtom(themeMode);
+  
+  // Set the mock theme mode for MUI components
+  setMockThemeMode(themeMode);
   
   // Create a wrapper component that mimics your providers
   const Wrapper = ({ children }: { children: React.ReactNode }) => {

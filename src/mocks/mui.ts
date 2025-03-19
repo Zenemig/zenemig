@@ -6,6 +6,13 @@ import { Theme } from '@mui/material/styles';
  * Only mock what we need to test our components, not MUI implementation details
  */
 
+// Create a function to get/update the theme mode from outside
+let currentThemeMode = 'light';
+
+export const setMockThemeMode = (mode: 'light' | 'dark') => {
+  currentThemeMode = mode;
+};
+
 /**
  * Mock for MUI ThemeProvider
  * Simply renders children with data attributes for testing
@@ -15,7 +22,11 @@ export const mockMuiThemeProvider = () => {
     const createThemeMock = jest.fn((options) => ({
       palette: {
         mode: options?.palette?.mode || 'light',
-        primary: { main: '#1976d2' },
+        primary: { 
+          main: '#1976d2',
+          light: '#42a5f5',
+          dark: '#1565c0' 
+        },
         secondary: { main: '#dc004e' },
         ...options?.palette
       },
@@ -41,10 +52,14 @@ export const mockMuiThemeProvider = () => {
       ...options
     }));
 
-    const useThemeMock = jest.fn().mockReturnValue({
+    const useThemeMock = jest.fn().mockImplementation(() => ({
       palette: {
-        mode: 'light',
-        primary: { main: '#1976d2' },
+        mode: currentThemeMode,
+        primary: { 
+          main: '#1976d2',
+          light: '#42a5f5',
+          dark: '#1565c0' 
+        },
         secondary: { main: '#dc004e' }
       },
       breakpoints: {
@@ -66,15 +81,20 @@ export const mockMuiThemeProvider = () => {
         tooltip: 1500
       },
       divider: 'rgba(0, 0, 0, 0.12)'
-    });
+    }));
 
     return {
-      ThemeProvider: jest.fn(({ children, theme }: { children: React.ReactNode; theme?: Partial<Theme> }) => 
-        React.createElement('div', {
+      ThemeProvider: jest.fn(({ children, theme }: { children: React.ReactNode; theme?: Partial<Theme> }) => {
+        // Update current theme mode when ThemeProvider is called
+        if (theme?.palette?.mode) {
+          currentThemeMode = theme.palette.mode;
+        }
+
+        return React.createElement('div', {
           'data-testid': 'mui-theme-provider',
           'data-theme-mode': theme?.palette?.mode || 'default'
-        }, children)
-      ),
+        }, children);
+      }),
       createTheme: createThemeMock,
       useTheme: useThemeMock
     };
