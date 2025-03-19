@@ -1,6 +1,6 @@
-const nextJest = require('next/jest');
+import { createJestConfig } from 'next/jest.js';
 
-const createJestConfig = nextJest({
+const config = createJestConfig({
   dir: './',
 });
 
@@ -10,6 +10,11 @@ const customJestConfig = {
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
+  testPathIgnorePatterns: [
+    '<rootDir>/node_modules/',
+    '<rootDir>/.next/',
+    '<rootDir>/e2e/',  // Exclude Playwright e2e tests
+  ],
   collectCoverageFrom: [
     'src/**/*.{js,jsx,ts,tsx}',
     '!src/**/*.d.ts',
@@ -27,4 +32,4 @@ const customJestConfig = {
   },
 };
 
-module.exports = createJestConfig(customJestConfig); 
+export default config(customJestConfig); 
