@@ -7,7 +7,7 @@ import Header from '@/components/Header';
 
 export default function Home() {
   return (
-    <Box sx={{ p: 2 }}>
+    <Box sx={{ p: 0, height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <ThreeColumnLayout
         headerComponent={
           <Header 
@@ -16,7 +16,14 @@ export default function Home() {
           />
         }
         leftColumn={
-          <Paper sx={{ p: 2, height: '100%' }}>
+          <Paper 
+            sx={{ 
+              p: 2, 
+              height: '100%',
+              borderRadius: 0, 
+            }}
+            elevation={0}
+          >
             <Typography variant="h5" component="h2" gutterBottom>
               Left Column
             </Typography>
@@ -29,7 +36,14 @@ export default function Home() {
           </Paper>
         }
         middleColumn={
-          <Paper sx={{ p: 2 }}>
+          <Paper 
+            sx={{ 
+              p: 2,
+              borderRadius: 0,
+              height: '100%',
+            }}
+            elevation={0}
+          >
             <Typography variant="h3" component="h1" gutterBottom>
               Welcome to Zenemig
             </Typography>
@@ -47,7 +61,14 @@ export default function Home() {
           </Paper>
         }
         rightColumn={
-          <Paper sx={{ p: 2, height: '100%' }}>
+          <Paper 
+            sx={{ 
+              p: 2, 
+              height: '100%',
+              borderRadius: 0, 
+            }}
+            elevation={0}
+          >
             <Typography variant="h5" component="h2" gutterBottom>
               Right Column
             </Typography>

@@ -60,7 +60,16 @@ export const mockMuiThemeProvider = () => {
           light: '#42a5f5',
           dark: '#1565c0' 
         },
-        secondary: { main: '#dc004e' }
+        secondary: { main: '#dc004e' },
+        background: {
+          default: '#fff',
+          paper: '#f5f5f5'
+        },
+        text: {
+          primary: 'rgba(0, 0, 0, 0.87)',
+          secondary: 'rgba(0, 0, 0, 0.6)',
+          disabled: 'rgba(0, 0, 0, 0.38)'
+        }
       },
       breakpoints: {
         up: jest.fn().mockReturnValue('@media (min-width:0px)'),

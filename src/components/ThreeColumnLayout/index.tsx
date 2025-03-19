@@ -19,7 +19,7 @@ function ThreeColumnLayout({
   middleColumn,
   rightColumn,
   headerComponent,
-  spacing = 2
+  spacing = 0
 }: ThreeColumnLayoutProps): JSX.Element {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -38,9 +38,19 @@ function ThreeColumnLayout({
           width: '100%',
           maxWidth: '100%',
           overflow: 'hidden',
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <Grid container spacing={spacing}>
+        <Grid 
+          container 
+          spacing={spacing} 
+          sx={{ 
+            height: '100%',
+            flex: 1
+          }}
+        >
           {/* Left Column - Hidden on mobile, fixed 320px width */}
           {!isMobile && leftColumn && (
             <Grid 
@@ -49,7 +59,8 @@ function ThreeColumnLayout({
                 display: { xs: 'none', sm: 'block' },
                 width: 320,
                 flexShrink: 0,
-                flexGrow: 0
+                flexGrow: 0,
+                height: '100%'
               }}
             >
               {leftColumn}
@@ -64,7 +75,8 @@ function ThreeColumnLayout({
             md={true}
             lg={true}
             sx={{
-              flexGrow: 1
+              flexGrow: 1,
+              height: '100%'
             }}
           >
             {middleColumn}
@@ -78,7 +90,8 @@ function ThreeColumnLayout({
                 display: { xs: 'none', sm: 'none', md: 'none', lg: 'block' },
                 width: 320,
                 flexShrink: 0,
-                flexGrow: 0
+                flexGrow: 0,
+                height: '100%'
               }}
             >
               {rightColumn}

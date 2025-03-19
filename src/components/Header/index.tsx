@@ -22,11 +22,13 @@ function Header({
     <AppBar 
       position="sticky" 
       color="primary"
-      elevation={0}
+      elevation={4}
       sx={{
-        borderBottom: `1px solid ${theme.palette.divider}`,
         top: 0,
         zIndex: theme.zIndex.appBar,
+        borderRadius: 0,
+        bgcolor: theme.palette.background.paper,
+        color: theme.palette.text.primary,
       }}
     >
       <Toolbar
