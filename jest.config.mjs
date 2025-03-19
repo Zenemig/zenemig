@@ -1,6 +1,7 @@
-import { createJestConfig } from 'next/jest.js';
+import nextJest from 'next/jest.js';
 
-const config = createJestConfig({
+// Create the next jest configuration
+const createJestConfig = nextJest({
   dir: './',
 });
 
@@ -32,4 +33,5 @@ const customJestConfig = {
   },
 };
 
-export default config(customJestConfig); 
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+export default createJestConfig(customJestConfig); 

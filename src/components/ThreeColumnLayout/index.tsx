@@ -23,7 +23,6 @@ function ThreeColumnLayout({
 }: ThreeColumnLayoutProps): JSX.Element {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   
   // Show header only on mobile (xs breakpoint)

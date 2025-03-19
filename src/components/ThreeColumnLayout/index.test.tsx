@@ -1,9 +1,24 @@
 import { renderWithProviders, screen } from '@/test-utils';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import ThreeColumnLayout from './index';
 
+// Mock the useMediaQuery hook
+jest.mock('@mui/material/useMediaQuery');
+const mockUseMediaQuery = useMediaQuery as jest.Mock;
+
 describe('<ThreeColumnLayout />', () => {
+  // Reset mocks before each test
+  beforeEach(() => {
+    mockUseMediaQuery.mockReset();
+  });
+  
   describe('Setup', () => {
     it('renders the main middle column', () => {
+      // Default behavior for non-mobile (show left column, hide right column)
+      // First call to useMediaQuery is for isMobile (should be false)
+      // Second call to useMediaQuery is for isDesktop (should be false)
+      mockUseMediaQuery.mockReturnValueOnce(false).mockReturnValueOnce(false);
+      
       renderWithProviders(
         <ThreeColumnLayout
           middleColumn={<div data-testid="middle-column">Middle Column</div>}
@@ -14,7 +29,12 @@ describe('<ThreeColumnLayout />', () => {
       expect(screen.getByText('Middle Column')).toBeInTheDocument();
     });
 
-    it('renders all columns when provided', () => {
+    it('renders all columns when provided on desktop', () => {
+      // Desktop view: not mobile, is desktop
+      // First call to useMediaQuery is for isMobile (should be false)
+      // Second call to useMediaQuery is for isDesktop (should be true)
+      mockUseMediaQuery.mockReturnValueOnce(false).mockReturnValueOnce(true);
+      
       renderWithProviders(
         <ThreeColumnLayout
           leftColumn={<div data-testid="left-column">Left Column</div>}
@@ -23,18 +43,17 @@ describe('<ThreeColumnLayout />', () => {
         />
       );
       
-      // The test environment doesn't simulate different viewport sizes by default,
-      // so all columns should be in the document but might be hidden via CSS
       expect(screen.getByTestId('middle-column')).toBeInTheDocument();
-      
-      // Note: The actual visibility of these elements would depend on the viewport size
-      // which is difficult to test in a headless environment without additional mocking
-      // This test just ensures that the component accepts and renders the columns
-      expect(screen.queryByTestId('left-column')).toBeInTheDocument();
-      expect(screen.queryByTestId('right-column')).toBeInTheDocument();
+      expect(screen.getByTestId('left-column')).toBeInTheDocument();
+      expect(screen.getByTestId('right-column')).toBeInTheDocument();
     });
 
-    it('includes header component when provided', () => {
+    it('includes header component when provided on mobile', () => {
+      // Mobile view: is mobile, not desktop  
+      // First call to useMediaQuery is for isMobile (should be true)
+      // Second call to useMediaQuery is for isDesktop (should be false)
+      mockUseMediaQuery.mockReturnValueOnce(true).mockReturnValueOnce(false);
+      
       renderWithProviders(
         <ThreeColumnLayout
           headerComponent={<div data-testid="header">Header Component</div>}
@@ -42,9 +61,7 @@ describe('<ThreeColumnLayout />', () => {
         />
       );
       
-      // In the test environment, we can't properly test the conditional rendering
-      // based on screen size, but we can test that the component is rendered when provided
-      // On mobile devices, the header should be visible
+      // The header should be visible on mobile
       expect(screen.getByTestId('header')).toBeInTheDocument();
       expect(screen.getByText('Header Component')).toBeInTheDocument();
     });

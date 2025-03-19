@@ -3,7 +3,17 @@ import { render, RenderOptions } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { PaletteMode } from '@mui/material';
 import { mockJotaiAtoms, setupMockThemeAtom } from '@/mocks/jotai';
-import { mockMuiThemeProvider, mockMuiCssBaseline, mockMuiButton } from '@/mocks/mui';
+import { 
+  mockMuiThemeProvider, 
+  mockMuiCssBaseline, 
+  mockMuiButton,
+  mockUseMediaQuery,
+  mockMuiBox,
+  mockMuiGrid,
+  mockMuiAppBar,
+  mockMuiToolbar,
+  mockMuiTypography
+} from '@/mocks/mui';
 
 // Initialize all mocks with a single setup call
 const setupTestEnvironment = () => {
@@ -11,6 +21,12 @@ const setupTestEnvironment = () => {
   mockMuiThemeProvider();
   mockMuiCssBaseline();
   mockMuiButton();
+  mockUseMediaQuery();
+  mockMuiBox();
+  mockMuiGrid();
+  mockMuiAppBar();
+  mockMuiToolbar();
+  mockMuiTypography();
 
   // Ensure Jotai atoms are mocked
   mockJotaiAtoms();
