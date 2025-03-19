@@ -1,85 +1,26 @@
-/* Import external resources - all imports must be at the top */
 @import "tailwindcss";
 
-/* Theme Variables */
 :root {
-  /* Zenemig color palette - light mode */
   --background: #ffffff;
-  --foreground: #171516;
-  --primary: #711f4d;
-  --primary-light: #8a3967;
-  --primary-dark: #5a1940;
-  --secondary: #00ab6c;
-  --secondary-light: #33bb87;
-  --secondary-dark: #008a57;
-  --text-primary: #171516;
-  --text-secondary: #3c3c3c;
-  
-  /* Social media colors */
-  --linkedin: #0077b5;
-  --github: #4078c0;
-  --medium: #00ab6c;
-  --instagram-gradient1: #fdf497;
-  --instagram-gradient2: #fd5949;
-  --instagram-gradient3: #d6249f;
-  --instagram-gradient4: #c13584;
-  
-  /* Spacing variables */
-  --space-smallest: 5px;
-  --space-small: 10px;
-  --space-regular: 15px;
-  --space-big: 30px;
-  --space-biggest: 60px;
+  --foreground: #171717;
 }
 
-/* Inline theme configuration */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-secondary: var(--secondary);
-  --font-sans: var(--font-roboto);
-  --font-title: var(--font-roboto-condensed);
-  --font-display: var(--font-unica-one);
-  --font-handwritten: var(--font-dancing-script);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
 }
 
-/* Dark mode overrides */
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Zenemig color palette - dark mode */
-    --background: #121212;
-    --foreground: #ffffff;
-    --primary: #8a3967;
-    --primary-light: #a35a82;
-    --primary-dark: #711f4d;
-    --secondary: #33bb87;
-    --secondary-light: #5ccca0;
-    --secondary-dark: #00ab6c;
-    --text-primary: #ffffff;
-    --text-secondary: #cccccc;
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 
-/* Base styles */
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto);
-  line-height: 1.5;
-}
-
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-roboto-condensed);
-  margin-bottom: var(--space-small);
-}
-
-/* Utility classes */
-.display-text {
-  font-family: var(--font-unica-one);
-  text-transform: uppercase;
-}
-
-.handwritten {
-  font-family: var(--font-dancing-script);
+  font-family: Arial, Helvetica, sans-serif;
 }

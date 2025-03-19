@@ -22,4 +22,4 @@
     "usePrettier": true,
     "linting": "All code must pass ESLint checks."
   }
-}
+} 

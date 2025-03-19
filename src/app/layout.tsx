@@ -1,60 +1,32 @@
-import type { Metadata } from "next";
-import { Roboto, Roboto_Condensed, Dancing_Script } from "next/font/google";
-import { Unica_One } from "next/font/google";
-import "./globals.css";
-import ThemeProvider from "../components/ThemeProvider";
+import { Inter } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useAtom } from 'jotai';
+import { themeAtom } from '@/atoms/theme';
+import getTheme from '@/theme';
 
-// Primary font - Roboto
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto',
-});
+const inter = Inter({ subsets: ['latin'] });
 
-// Secondary font - Roboto Condensed
-const robotoCondensed = Roboto_Condensed({
-  weight: ['300', '400', '500', '600', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-roboto-condensed',
-});
-
-// Handwritten font - Dancing Script
-const dancingScript = Dancing_Script({
-  weight: ['400', '500', '600', '700'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-dancing-script',
-});
-
-// Display font - Unica One
-const unicaOne = Unica_One({
-  weight: ['400'],
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-unica-one',
-});
-
-export const metadata: Metadata = {
-  title: "Zenemig | Developer & Photographer",
-  description: "Zenemig's personal portfolio - Showcasing photography, development projects, and creative work",
-  keywords: "Zenemig, photography, development, creative, portfolio, developer",
+export const metadata = {
+  title: 'Zenemig',
+  description: 'Zenemig - Personal Website',
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
+  const [mode] = useAtom(themeAtom);
+  const theme = getTheme(mode);
+
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${roboto.variable} ${robotoCondensed.variable} ${dancingScript.variable} ${unicaOne.variable} antialiased`}
-      >
+    <html lang="en">
+      <body className={inter.className}>
         <AppRouterCacheProvider>
-          <ThemeProvider>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
             {children}
           </ThemeProvider>
         </AppRouterCacheProvider>
