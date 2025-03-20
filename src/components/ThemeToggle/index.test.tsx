@@ -4,36 +4,22 @@ import { renderWithProviders, screen } from '@/test-utils';
 import { setupUserEvent } from '@/test-utils';
 import ThemeToggle from './index';
 
-// Mock the Switch component
-jest.mock('@mui/material/Switch', () => ({
-  __esModule: true,
-  default: ({ checked, onChange, inputProps = {}, ...props }: any) => 
-    React.createElement('input', {
-      type: 'checkbox',
-      checked,
-      onChange,
-      'aria-label': inputProps['aria-label'],
-      'data-testid': 'mui-switch',
-      ...props
-    })
-}));
-
 describe('<ThemeToggle />', () => {
   describe('Setup', () => {
     it('renders with correct initial state in light mode', () => {
-      const { mockSetMode } = renderWithProviders(<ThemeToggle />);
+      renderWithProviders(<ThemeToggle />);
       
-      // Verify the toggle is in light mode
-      const toggle = screen.getByTestId('mui-switch');
-      expect(toggle).not.toBeChecked();
+      // Verify the button shows dark mode icon
+      const button = screen.getByRole('button', { name: 'Toggle dark mode' });
+      expect(button).toBeInTheDocument();
     });
 
     it('renders with correct initial state in dark mode', () => {
-      const { mockSetMode } = renderWithProviders(<ThemeToggle />, { mode: 'dark' });
+      renderWithProviders(<ThemeToggle />, { mode: 'dark' });
       
-      // Verify the toggle is in dark mode
-      const toggle = screen.getByTestId('mui-switch');
-      expect(toggle).toBeChecked();
+      // Verify the button shows light mode icon
+      const button = screen.getByRole('button', { name: 'Toggle light mode' });
+      expect(button).toBeInTheDocument();
     });
   });
 
@@ -42,9 +28,9 @@ describe('<ThemeToggle />', () => {
       const user = setupUserEvent();
       const { mockSetMode } = renderWithProviders(<ThemeToggle />);
       
-      // Click the toggle
-      const toggle = screen.getByTestId('mui-switch');
-      await user.click(toggle);
+      // Click the toggle button
+      const button = screen.getByRole('button');
+      await user.click(button);
       
       // Verify the theme was toggled
       expect(mockSetMode).toHaveBeenCalledTimes(1);

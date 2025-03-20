@@ -1,5 +1,7 @@
 'use client';
 
+import { useMemo } from 'react';
+
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { useTheme } from '@mui/material/styles';
@@ -9,10 +11,9 @@ import { ThreeColumnLayoutProps } from './ThreeColumnLayout.types';
 
 /**
  * A responsive three-column layout component
- * - Left column is hidden on mobile (xs)
- * - Right column is hidden on tablet (sm, md)
- * - All columns are visible on desktop and above (lg, xl)
- * - Header is only visible on mobile (xs breakpoint)
+ * - Mobile (xs): Only middle column and header visible
+ * - Tablet (sm, md): Left and middle columns visible
+ * - Desktop (lg, xl): All three columns visible
  */
 function ThreeColumnLayout({
   leftColumn,
@@ -23,10 +24,28 @@ function ThreeColumnLayout({
 }: ThreeColumnLayoutProps): JSX.Element {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.between('sm', 'lg'));
   const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
   
-  // Show header only on mobile (xs breakpoint)
+  // Show header only on mobile
   const showHeader = isMobile;
+
+  // Calculate middle column width based on visible columns
+  const middleColumnWidth = useMemo(() => {
+    if (isDesktop) {
+      // Desktop: account for both left and right columns
+      const sideColumnsWidth = (leftColumn ? 320 : 0) + (rightColumn ? 320 : 0);
+      return sideColumnsWidth > 0 ? `calc(100% - ${sideColumnsWidth}px)` : '100%';
+    }
+    
+    if (isTablet) {
+      // Tablet: account for left column only
+      return leftColumn ? 'calc(100% - 320px)' : '100%';
+    }
+    
+    // Mobile: full width
+    return '100%';
+  }, [isDesktop, isTablet, leftColumn, rightColumn]);
 
   return (
     <>
@@ -48,21 +67,15 @@ function ThreeColumnLayout({
           spacing={spacing} 
           sx={{ 
             height: '100%',
-            flex: 1
+            width: '100%'
           }}
         >
-          {/* Left Column - Hidden on mobile and tablet, fixed 320px width */}
-          {isDesktop && leftColumn && (
+          {/* Left Column - Visible on tablet and desktop */}
+          {(isTablet || isDesktop) && leftColumn && (
             <Grid 
               item
-              xs={false}
-              sm={4}
-              md={4}
-              lg={3}
               sx={{ 
-                width: { sm: 320 },
-                flexShrink: 0,
-                flexGrow: 0,
+                width: '320px',
                 height: '100%'
               }}
             >
@@ -73,32 +86,20 @@ function ThreeColumnLayout({
           {/* Middle Column - Always visible, fills remaining space */}
           <Grid 
             item
-            xs={12}
-            sm={12}
-            md={12}
-            lg={6}
-            xl={6}
             sx={{
-              flexGrow: 1,
+              width: middleColumnWidth,
               height: '100%',
-              minWidth: 0 // Prevent flex item from overflowing
             }}
           >
             {middleColumn}
           </Grid>
 
-          {/* Right Column - Hidden on mobile and tablet, fixed 320px width */}
+          {/* Right Column - Only visible on desktop */}
           {isDesktop && rightColumn && (
             <Grid
               item
-              xs={false}
-              sm={false}
-              md={false}
-              lg={3}
-              xl={3}
               sx={{
                 width: '320px',
-                maxWidth: '320px',
                 height: '100%'
               }}
             >

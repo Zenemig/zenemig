@@ -1,3 +1,7 @@
+// Import test utilities setup
+import './src/test-utils/setupTests';
+
+// Add any other global test setup here
 import '@testing-library/jest-dom';
 
 // Mock next/navigation

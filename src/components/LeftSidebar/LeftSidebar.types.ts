@@ -6,8 +6,8 @@ export interface LeftSidebarProps {
   title?: string;
   /** User's current status */
   status?: string;
-  /** User's phone number */
-  phoneNumber?: string;
+  /** Link to user's status */
+  statusLink?: string;
   /** User's email address */
   email?: string;
   /** User's social media links */

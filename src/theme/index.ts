@@ -52,55 +52,75 @@ const getTheme = (mode: PaletteMode): Theme => muiCreateTheme({
     divider: mode === 'light' ? 'rgba(0, 0, 0, 0.12)' : 'rgba(255, 255, 255, 0.12)',
   },
   typography: {
-    // Font families based on zenemig.net (serif for headings, sans-serif for body)
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    // Main body text font family
+    fontFamily: '"Roboto", sans-serif',
+    // Display text for special components
+    displayFont: {
+      fontFamily: 'var(--unica-one-font), cursive',
+    },
+    // Title text for headings
     h1: {
-      fontFamily: 'var(--playfair-font), "Times New Roman", serif',
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
       fontSize: '2.5rem',
       fontWeight: 700,
       lineHeight: 1.2,
     },
     h2: {
-      fontFamily: 'var(--playfair-font), "Times New Roman", serif',
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
       fontSize: '2rem',
       fontWeight: 600,
       lineHeight: 1.3,
     },
     h3: {
-      fontFamily: 'var(--playfair-font), "Times New Roman", serif',
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
       fontSize: '1.75rem',
       fontWeight: 600,
       lineHeight: 1.3,
     },
     h4: {
-      fontFamily: 'var(--playfair-font), "Times New Roman", serif',
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
       fontSize: '1.5rem',
       fontWeight: 500,
       lineHeight: 1.4,
     },
     h5: {
-      fontFamily: 'var(--playfair-font), "Times New Roman", serif',
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
       fontSize: '1.25rem',
       fontWeight: 500,
       lineHeight: 1.4,
     },
     h6: {
-      fontFamily: 'var(--playfair-font), "Times New Roman", serif',
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
       fontSize: '1rem',
       fontWeight: 500,
       lineHeight: 1.5,
     },
     body1: {
+      fontFamily: '"Roboto", sans-serif',
       fontSize: '1rem',
       lineHeight: 1.5,
     },
     body2: {
+      fontFamily: '"Roboto", sans-serif',
       fontSize: '0.875rem',
       lineHeight: 1.43,
     },
     button: {
+      fontFamily: '"Roboto", sans-serif',
       textTransform: 'none',
       fontWeight: 500,
+    },
+    caption: {
+      fontFamily: '"Roboto", sans-serif',
+    },
+    overline: {
+      fontFamily: '"Roboto", sans-serif',
+    },
+    subtitle1: {
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
+    },
+    subtitle2: {
+      fontFamily: 'var(--roboto-condensed-font), sans-serif',
     },
   },
   components: {
@@ -128,11 +148,16 @@ const getTheme = (mode: PaletteMode): Theme => muiCreateTheme({
         root: {
           borderRadius: 4,
           backgroundImage: 'none',
+          backgroundColor: 'transparent',
+          boxSizing: 'border-box'
         },
         elevation1: {
           boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.1)',
         },
       },
+      defaultProps: {
+        elevation: 0
+      }
     },
     MuiTextField: {
       styleOverrides: {
@@ -171,8 +196,23 @@ const getTheme = (mode: PaletteMode): Theme => muiCreateTheme({
         root: {
           color: mode === 'light' ? '#8C1D18' : '#A8433F',
           textDecoration: 'none',
+          transition: 'color 0.3s ease',
           '&:hover': {
-            textDecoration: 'underline',
+            color: mode === 'light' ? '#D42A24' : '#C15955',
+            textDecoration: 'none',
+          },
+          '&:visited': {
+            textDecoration: 'none',
+          },
+          '&:active': {
+            textDecoration: 'none',
+          },
+          '&:focus': {
+            textDecoration: 'none',
+          },
+          '& .MuiSvgIcon-root': {
+            color: 'inherit',
+            transition: 'color 0.3s ease',
           },
         },
       },
@@ -182,6 +222,42 @@ const getTheme = (mode: PaletteMode): Theme => muiCreateTheme({
       styleOverrides: {
         root: {
           color: 'inherit',
+          transition: 'color 0.3s ease',
+        },
+      },
+    },
+    // Add IconButton styling to match links
+    MuiIconButton: {
+      styleOverrides: {
+        root: {
+          color: mode === 'light' ? '#8C1D18' : '#A8433F',
+          transition: 'color 0.3s ease',
+          '&:hover': {
+            color: mode === 'light' ? '#D42A24' : '#C15955',
+            backgroundColor: 'transparent',
+          },
+          '& .MuiSvgIcon-root': {
+            color: 'inherit',
+          },
+        },
+      },
+    },
+    // Add consistent styling to buttons with href
+    MuiButtonBase: {
+      styleOverrides: {
+        root: {
+          // Apply link styling to any button with an href
+          '&[href]': {
+            transition: 'color 0.3s ease',
+            textDecoration: 'none',
+            '&:hover': {
+              color: mode === 'light' ? '#D42A24' : '#C15955',
+              textDecoration: 'none',
+            },
+            '&:visited, &:active, &:focus': {
+              textDecoration: 'none',
+            },
+          }
         },
       },
     },

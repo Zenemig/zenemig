@@ -1,13 +1,24 @@
-import { Inter, Playfair_Display } from 'next/font/google';
+import { Roboto, Roboto_Condensed, Unica_One } from 'next/font/google';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
 import { Provider } from 'jotai';
 import ThemeProvider from '@/components/ThemeProvider';
 
-const inter = Inter({ subsets: ['latin'] });
-const playfairDisplay = Playfair_Display({ 
+const roboto = Roboto({ 
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'], 
-  variable: '--playfair-font',
+  weight: ['300', '400', '500', '700'],
+  variable: '--roboto-font',
+});
+
+const robotoCondensed = Roboto_Condensed({ 
+  subsets: ['latin'],
+  weight: ['300', '400', '700'],
+  variable: '--roboto-condensed-font',
+});
+
+const unicaOne = Unica_One({ 
+  subsets: ['latin'],
+  weight: ['400'],
+  variable: '--unica-one-font',
 });
 
 export const metadata = {
@@ -31,7 +42,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} ${playfairDisplay.variable}`}>
+      <body className={`${roboto.className} ${robotoCondensed.variable} ${unicaOne.variable}`}>
         <AppRouterCacheProvider>
           <Provider>
             <ThemeProvider>

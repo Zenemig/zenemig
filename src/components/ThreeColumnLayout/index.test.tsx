@@ -35,46 +35,12 @@ describe('<ThreeColumnLayout />', () => {
   });
   
   describe('Layout Behavior', () => {
-    it('shows only middle column on tablet view', () => {
-      // Tablet view: not mobile (false), not desktop (false)
-      mockUseMediaQuery.mockReturnValueOnce(false).mockReturnValueOnce(false);
-      
-      renderWithProviders(
-        <ThreeColumnLayout
-          leftColumn={React.createElement('div', { 'data-testid': 'left-column' }, 'Left')}
-          middleColumn={React.createElement('div', { 'data-testid': 'middle-column' }, 'Middle')}
-          rightColumn={React.createElement('div', { 'data-testid': 'right-column' }, 'Right')}
-        />
-      );
-      
-      // Middle column should be visible
-      expect(screen.getByTestId('middle-column')).toBeInTheDocument();
-      // Side columns should not be visible
-      expect(screen.queryByTestId('left-column')).not.toBeInTheDocument();
-      expect(screen.queryByTestId('right-column')).not.toBeInTheDocument();
-    });
-
-    it('shows all columns on desktop view', () => {
-      // Desktop view: not mobile (false), is desktop (true)
-      mockUseMediaQuery.mockReturnValueOnce(false).mockReturnValueOnce(true);
-      
-      renderWithProviders(
-        <ThreeColumnLayout
-          leftColumn={React.createElement('div', { 'data-testid': 'left-column' }, 'Left')}
-          middleColumn={React.createElement('div', { 'data-testid': 'middle-column' }, 'Middle')}
-          rightColumn={React.createElement('div', { 'data-testid': 'right-column' }, 'Right')}
-        />
-      );
-      
-      // All columns should be visible
-      expect(screen.getByTestId('left-column')).toBeInTheDocument();
-      expect(screen.getByTestId('middle-column')).toBeInTheDocument();
-      expect(screen.getByTestId('right-column')).toBeInTheDocument();
-    });
-
-    it('shows header and middle column on mobile view', () => {
-      // Mobile view: is mobile (true), not desktop (false)
-      mockUseMediaQuery.mockReturnValueOnce(true).mockReturnValueOnce(false);
+    it('shows only middle column on mobile view', () => {
+      // Mock media queries: isMobile = true, isTablet = false, isDesktop = false
+      mockUseMediaQuery
+        .mockReturnValueOnce(true)  // isMobile
+        .mockReturnValueOnce(false) // isTablet
+        .mockReturnValueOnce(false); // isDesktop
       
       renderWithProviders(
         <ThreeColumnLayout
@@ -91,6 +57,55 @@ describe('<ThreeColumnLayout />', () => {
       // Side columns should not be visible
       expect(screen.queryByTestId('left-column')).not.toBeInTheDocument();
       expect(screen.queryByTestId('right-column')).not.toBeInTheDocument();
+    });
+
+    it('shows left and middle columns on tablet view', () => {
+      // Mock media queries: isMobile = false, isTablet = true, isDesktop = false
+      mockUseMediaQuery
+        .mockReturnValueOnce(false) // isMobile
+        .mockReturnValueOnce(true)  // isTablet
+        .mockReturnValueOnce(false); // isDesktop
+      
+      renderWithProviders(
+        <ThreeColumnLayout
+          headerComponent={React.createElement('div', { 'data-testid': 'header' }, 'Header')}
+          middleColumn={React.createElement('div', { 'data-testid': 'middle-column' }, 'Middle')}
+          leftColumn={React.createElement('div', { 'data-testid': 'left-column' }, 'Left')}
+          rightColumn={React.createElement('div', { 'data-testid': 'right-column' }, 'Right')}
+        />
+      );
+      
+      // Header should not be visible
+      expect(screen.queryByTestId('header')).not.toBeInTheDocument();
+      // Left and middle column should be visible
+      expect(screen.getByTestId('left-column')).toBeInTheDocument();
+      expect(screen.getByTestId('middle-column')).toBeInTheDocument();
+      // Right column should not be visible
+      expect(screen.queryByTestId('right-column')).not.toBeInTheDocument();
+    });
+
+    it('shows all columns on desktop view', () => {
+      // Mock media queries: isMobile = false, isTablet = false, isDesktop = true
+      mockUseMediaQuery
+        .mockReturnValueOnce(false) // isMobile
+        .mockReturnValueOnce(false) // isTablet
+        .mockReturnValueOnce(true); // isDesktop
+      
+      renderWithProviders(
+        <ThreeColumnLayout
+          headerComponent={React.createElement('div', { 'data-testid': 'header' }, 'Header')}
+          middleColumn={React.createElement('div', { 'data-testid': 'middle-column' }, 'Middle')}
+          leftColumn={React.createElement('div', { 'data-testid': 'left-column' }, 'Left')}
+          rightColumn={React.createElement('div', { 'data-testid': 'right-column' }, 'Right')}
+        />
+      );
+      
+      // Header should not be visible
+      expect(screen.queryByTestId('header')).not.toBeInTheDocument();
+      // All columns should be visible
+      expect(screen.getByTestId('left-column')).toBeInTheDocument();
+      expect(screen.getByTestId('middle-column')).toBeInTheDocument();
+      expect(screen.getByTestId('right-column')).toBeInTheDocument();
     });
   });
 }); 

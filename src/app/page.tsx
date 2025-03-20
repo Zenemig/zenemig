@@ -29,9 +29,12 @@ export default function Home() {
         middleColumn={
           <Paper 
             sx={{ 
-              p: 2,
+              p: 4,
               borderRadius: 0,
               height: '100%',
+              bgcolor: 'background.paper',
+              boxSizing: 'border-box',
+              width: '100%'
             }}
             elevation={0}
           >
@@ -54,9 +57,12 @@ export default function Home() {
         rightColumn={
           <Paper 
             sx={{ 
-              p: 2, 
+              p: 4, 
               height: '100%',
-              borderRadius: 0, 
+              borderRadius: 0,
+              bgcolor: 'background.paper',
+              boxSizing: 'border-box',
+              width: '100%'
             }}
             elevation={0}
           >

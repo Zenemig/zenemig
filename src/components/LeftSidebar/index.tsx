@@ -8,7 +8,6 @@ import Typography from '@mui/material/Typography';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import InstagramIcon from '@mui/icons-material/Instagram';
-import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 
 import Logo from '@/components/Logo';
@@ -23,7 +22,7 @@ import { LeftSidebarProps } from './LeftSidebar.types';
  * <LeftSidebar
  *   title="Front-End Developer"
  *   status="Available for Hire"
- *   phoneNumber="+56 9 8500 6191"
+ *   statusLink="https://www.nerdy.com"
  *   email="hola@zenemig.net"
  *   socialLinks={{
  *     github: "https://github.com/zenemig",
@@ -33,25 +32,27 @@ import { LeftSidebarProps } from './LeftSidebar.types';
  * />
  */
 function LeftSidebar({
-  title = 'Front-End Developer',
-  status = 'Available for Hire',
-  phoneNumber = '+56 9 8500 6191',
+  title = 'Sr. Front-End Engineer',
+  status = 'Varsity Tutors',
+  statusLink = 'https://www.varsitytutors.com',
   email = 'hola@zenemig.net',
   socialLinks = {
     github: 'https://github.com/zenemig',
     linkedin: 'https://linkedin.com/in/zenemig',
-    instagram: 'https://instagram.com/zenemig'
+    instagram: 'https://instagram.com/zenemig.photography'
   }
 }: LeftSidebarProps): JSX.Element {
   return (
     <Paper 
       sx={{ 
-        p: 3, 
+        p: 4, 
         height: '100%',
         borderRadius: 0, 
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        bgcolor: 'background.paper',
+        width: '100%'
       }}
       elevation={0}
     >
@@ -71,7 +72,6 @@ function LeftSidebar({
             href={socialLinks.github}
             target="_blank" 
             rel="noopener noreferrer"
-            sx={{ color: 'text.primary' }}
             aria-label="GitHub"
           >
             <GitHubIcon fontSize="medium" />
@@ -82,7 +82,6 @@ function LeftSidebar({
             href={socialLinks.linkedin}
             target="_blank" 
             rel="noopener noreferrer"
-            sx={{ color: 'text.primary' }}
             aria-label="LinkedIn"
           >
             <LinkedInIcon fontSize="medium" />
@@ -93,10 +92,19 @@ function LeftSidebar({
             href={socialLinks.instagram}
             target="_blank" 
             rel="noopener noreferrer"
-            sx={{ color: 'text.primary' }}
             aria-label="Instagram"
           >
             <InstagramIcon fontSize="medium" />
+          </Link>
+        )}
+        {email && (
+          <Link
+            href={`mailto:${email}`}
+            target="_blank" 
+            rel="noopener noreferrer"
+            aria-label="Email"
+          >
+            <EmailIcon />
           </Link>
         )}
       </Stack>
@@ -116,51 +124,22 @@ function LeftSidebar({
       </Typography>
       
       {/* Status */}
-      <Typography 
-        variant="subtitle1" 
-        align="center" 
-        sx={{ 
-          mb: 4,
-          color: 'error.main',
-          fontWeight: 500
-        }}
+      <Link 
+        href={statusLink}
+        target="_blank"
+        rel="noopener noreferrer"
       >
-        {status}
-      </Typography>
-      
-      {/* Contact Information */}
-      <Stack spacing={2} sx={{ width: '100%', mb: 4 }}>
-        {phoneNumber && (
-          <Link 
-            href={`tel:${phoneNumber}`}
-            sx={{ 
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textDecoration: 'none',
-              color: 'text.primary'
-            }}
-          >
-            <PhoneIcon sx={{ mr: 1, color: 'error.main' }} />
-            <Typography>{phoneNumber}</Typography>
-          </Link>
-        )}
-        {email && (
-          <Link 
-            href={`mailto:${email}`}
-            sx={{ 
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              textDecoration: 'none',
-              color: 'text.primary'
-            }}
-          >
-            <EmailIcon sx={{ mr: 1, color: 'error.main' }} />
-            <Typography>{email}</Typography>
-          </Link>
-        )}
-      </Stack>
+        <Typography 
+          variant="subtitle1" 
+          align="center" 
+          sx={{ 
+            mb: 4,
+            fontWeight: 500
+          }}
+        >
+          {status}
+        </Typography>
+      </Link>
       
       {/* Theme Toggle */}
       <Box sx={{ mt: 'auto' }}>
